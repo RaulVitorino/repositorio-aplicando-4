@@ -2,3 +2,6 @@ O projeto desevolvido representa a simulação de protótipo de um consumo, moni
 de nível do tipo boia. Esse sensor envia os dados para o esp32 que por meio do mqtt envia os dados para o esp01 que está conectado a um rele que assiona uma bomba d'água para
 encher o reservatório principal. Esse reservatório é o que serve para fornecer água para consumo, havendo um sensor de fluxo do tipo hall conectado na saída de agua desse reservatório,
 o qual faz a medição do consumo de água e monstra os dados no monitor serial.
+
+Para o desenvolvimento do código e do projeto, foi usado o software Arduino IDE. O mqtt usado foi o "broker.hivemq.com", na porta "1883" e com o tópico "nivel/sensores".
+
