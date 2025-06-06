@@ -1,0 +1,114 @@
+# repositorio-aplicando-4
+
+// Esse é o código do publicador
+
+#include <WiFi.h>
+#include <PubSubClient.h>
+
+// Config WiFi
+const char* ssid = "cavalo de troia";
+const char* password = "franscisca49";
+
+// Config MQTT
+const char* mqtt_server = "broker.hivemq.com";
+const int mqtt_port = 1883;
+const char* mqtt_topic = "nivel/sensores";
+
+WiFiClient espClient;
+PubSubClient client(espClient);
+
+// Pinos dos sensores
+const int sensorNivel1 = 14;
+const int fluxoPin = 27;  // Pino do sensor de fluxo
+
+volatile int pulsosFluxo = 0;  // Contador de pulsos
+
+// Constante de calibração do sensor YF-S201 é aproximandamente 7.5
+const float fatorCalibracao = 7.5;
+
+unsigned long tempoAnterior = 0;
+float taxaFluxo = 0.0;
+
+// Interrupção chamada a cada pulso do sensor
+void IRAM_ATTR contarPulso() {
+  pulsosFluxo++;
+}
+
+void setup_wifi() {
+  delay(10);
+  Serial.println("Conectando ao WiFi...");
+  WiFi.begin(ssid, password);
+
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+
+  Serial.println("\nWiFi conectado.");
+  Serial.print("IP: ");
+  Serial.println(WiFi.localIP());
+}
+
+void reconnect() {
+  while (!client.connected()) {
+    Serial.print("Conectando ao broker MQTT...");
+    String clientId = "ESP32SensorClient-" + String(random(0xffff), HEX);
+    if (client.connect(clientId.c_str())) {
+      Serial.println("Conectado.");
+    } else {
+      Serial.print("Falha, rc=");
+      Serial.print(client.state());
+      Serial.println(" tentando novamente em 2s...");
+      delay(2000);
+    }
+  }
+}
+
+void setup() {
+  Serial.begin(115200);
+  pinMode(sensorNivel1, INPUT_PULLDOWN);
+  pinMode(fluxoPin, INPUT_PULLUP);
+  attachInterrupt(digitalPinToInterrupt(fluxoPin), contarPulso, RISING);
+
+  setup_wifi();
+  client.setServer(mqtt_server, mqtt_port);
+}
+
+void loop() {
+  if (WiFi.status() != WL_CONNECTED) {
+    setup_wifi();
+  }
+
+  if (!client.connected()) {
+    reconnect();
+  }
+  client.loop();
+
+  // Leitura do sensor de nível
+  int nivel1 = digitalRead(sensorNivel1);
+
+  // Calcular fluxo de água
+  unsigned long tempoAtual = millis();
+  if (tempoAtual - tempoAnterior >= 1000) { // a cada 1 segundo
+    detachInterrupt(digitalPinToInterrupt(fluxoPin));
+    float freq = pulsosFluxo;
+    taxaFluxo = (freq / fatorCalibracao); // em L/min
+    pulsosFluxo = 0;
+    tempoAnterior = tempoAtual;
+    attachInterrupt(digitalPinToInterrupt(fluxoPin), contarPulso, RISING);
+
+    // Mostrar no Serial apenas
+    Serial.print("Taxa de fluxo: ");
+    Serial.print(taxaFluxo, 2);
+    Serial.println(" L/min");
+  }
+
+  // Enviar apenas o sensor do nivel1 ao MQTT
+  char mensagem[30];
+  sprintf(mensagem, "{\"nivel1\": %d}", nivel1);
+  client.publish(mqtt_topic, mensagem);
+  Serial.print("MQTT enviado: ");
+  Serial.println(mensagem);
+
+  delay(3000);
+}
