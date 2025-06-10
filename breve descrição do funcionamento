@@ -5,3 +5,5 @@ o qual faz a medição do consumo de água e monstra os dados no monitor serial.
 
 Para o desenvolvimento do código e do projeto, foi usado o software Arduino IDE. O mqtt usado foi o "broker.hivemq.com", na porta "1883" e com o tópico "nivel/sensores".
 
+Para monitoramento das mensagens via mqtt foi usado o software MQTT Explorer, conforme mostrado no segundo vídeo.
+
