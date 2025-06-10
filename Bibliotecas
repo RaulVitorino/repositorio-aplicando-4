@@ -1,0 +1,8 @@
+#Bibliotecas esp 01
+<ESP8266WiFi.h>
+<PubSubClient.h>
+<ArduinoJson.h>
+
+#Bibliotecas esp 32
+<WiFi.h>
+<PubSubClient.h>
