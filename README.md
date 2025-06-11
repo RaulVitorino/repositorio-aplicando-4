@@ -31,6 +31,9 @@ Segue o link da apresentação do projeto: https://youtu.be/g6DmTQKFGOM?si=C8ZYR
 
 Segue o link para a demonstração do mqtt: https://www.youtube.com/watch?v=wt46ds-iPzk
 
+O fluxograma do funcionamento do mqtt está descrito na imagem: ![image](https://github.com/user-attachments/assets/04123d04-108a-426f-8338-674207c6b58e)
+
+
 
 📚 Componentes utilizados
 
