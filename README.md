@@ -25,6 +25,13 @@ No esp 32 foram utilizados os pinos 14 e 27 para os sensores de nível e fluxo, 
 
 Pelo relê passava uma corrente de 12V que servia de alimentação para o motor. O esp 01 foi alimentado por uma corrente de 5V, bem como o esp 32.
 
+Segue o link do projeto: https://github.com/RaulVitorino/repositorio-aplicando-4/blob/main/Artigo%20projeto%20de%20IoT%20final.pdf
+
+Segue o link da apresentação do projeto: https://youtu.be/g6DmTQKFGOM?si=C8ZYR7MEs-rRZCmN
+
+Segue o link para a demonstração do mqtt: https://www.youtube.com/watch?v=wt46ds-iPzk
+
+
 📚 Componentes utilizados
 
 ![image](https://github.com/user-attachments/assets/20544484-be6c-4f9c-8a9e-cdad5e76b5cc)
